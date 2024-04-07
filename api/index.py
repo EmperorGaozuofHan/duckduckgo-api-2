@@ -22,6 +22,19 @@ def search():
     # 返回一个json响应，包含搜索结果
     return {'results': results}
 
+@app.route('/search_internet', methods=['POST'])
+def search_internet():
+    # 从请求的json数据中获取搜索查询
+    query = request.json['query']
+    # 使用DuckDuckGo搜索关键词
+    with DDGS() as ddgs:
+        ddgs_gen = ddgs.text(query, safesearch='Off', timelimit='y', backend="lite")
+        # 获取第一个搜索结果
+        result = next(ddgs_gen, None)
+    # 返回一个json响应，包含搜索结果
+    return {'data': result}
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
+
 
